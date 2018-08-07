@@ -64,7 +64,7 @@ def read_ItemEmbedding(File_ItemEmbedding):
             t.append(float(ss[i]))
         ItemEmbedding[ItemId] = np.array(t, dtype = np.float32)
 	a.append(len(ss)-1)
-    print set(a)
+    print(set(a))
     f.close()
     length = ItemEmbedding[ItemEmbedding.keys()[0]].shape[0]
     return ItemEmbedding, length
@@ -85,11 +85,11 @@ if __name__ == '__main__':
     valid = pd.read_csv(PATH_TO_TRAIN, sep='\t', dtype={'ItemId':np.int64})
 
     ItemEmbedding, length = read_ItemEmbedding(File_ItemEmbedding)
-    print "the length and number of data ItemEmbedding", length, len(ItemEmbedding)
+    print("the length and number of data ItemEmbedding", length, len(ItemEmbedding))
     KBItemEmbedding, KBlength = read_ItemEmbedding(File_KBItemEmbedding)
-    print "the length and number of data ItemEmbedding", KBlength, len(KBItemEmbedding)
+    print("the length and number of data ItemEmbedding", KBlength, len(KBItemEmbedding))
     r_matrix = read_r_matrix(File_r_matrix)
-    print "the shape of r_matrix", r_matrix.shape
+    print("the shape of r_matrix", r_matrix.shape)
     #Reproducing results from "Session-based Recommendations with Recurrent Neural Networks" on RSC15 (http://arxiv.org/abs/1511.06939)
     '''    
     print('Training GRU4Rec with 100 hidden units')    
@@ -107,13 +107,13 @@ if __name__ == '__main__':
     gru = MN4rec.GRU4Rec(loss='bpr', final_act='linear', hidden_act=args.activation, layers=[256], batch_size=args.batch_size, embedding=length, KBembedding=KBlength, dropout_p_hidden=args.dropout, n_sample=args.num_neg, learning_rate=args.lr, momentum=0.1, sample_alpha=0, time_sort=True, n_epochs=args.epochs, train_random_order=True, out_dim=args.out_dim, MN_nfactors=r_matrix.shape[0], MN_dims=r_matrix.shape[1])
     gru.fit(data, ItemEmbedding, KBItemEmbedding, r_matrix)
     print("Training time is")
-    print (start_time - time.time())
+    print(start_time - time.time())
     ItemFile = 'item_embedding'
     gru.save_ItemEmbedding(data, ItemFile)#'item.embedding')
 
     UserFile = 'user.embedding'
     evaluation.evaluate_sessions_batch(gru, valid, None, SaveUserFile = UserFile)#'user.embedding')
     end_time = time.time()
-    print start_time, end_time
-    print (start_time - end_time)
+    print(start_time, end_time)
+    print(start_time - end_time)
 
